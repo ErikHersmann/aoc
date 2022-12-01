@@ -1,7 +1,9 @@
 # aoc22
+<pre>
 my solutions for advent of code 2022
 
 first doing everything in python and if I still have time I'll also try to in go    
+          python    go
 day    0   
 day    1            
 day    2   
@@ -33,3 +35,4 @@ day   27
 day   28   
 day   29   
 day   30   
+</pre>
