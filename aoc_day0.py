@@ -1,4 +1,5 @@
-str0 = "input"
+with open("day0_input.txt", "r") as file:
+    str0 = file.read()
 c = 0
 arr0 = []
 for i in str0.splitlines():
