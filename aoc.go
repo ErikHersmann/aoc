@@ -1,1 +1,4 @@
-str0 := "peepoPoopoo"
+func main(){
+  str0 := "peepoPoopoo"
+  print(str0)
+}
