@@ -5,10 +5,16 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"io/ioutil"
+    	"log"
 )
 
 func main() {
-	str0 := "input"
+	content, err0 := ioutil.ReadFile("day0_input.txt")
+     	if err0 != nil {
+          log.Fatal(err0)
+     	}
+    	str0 :=  string(content)
 	var arr0 []int
 	c := 0
 	for _,val:= range strings.Split(str0, "\n"){
