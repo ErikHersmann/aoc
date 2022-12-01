@@ -3,6 +3,7 @@
 my solutions for advent of code 2022
 
 mainly: python
+
 others:go, R?, sql???
 
 | day  | python | go | other? |
