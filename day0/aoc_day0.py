@@ -8,7 +8,6 @@ for i in str0.splitlines():
     except :
         arr0 += [c]
         c = 0   
-
-
-print(sorted(arr0))
-print(69921+70450+72718)
+arr0 = sorted(arr0)
+print(arr0[-1])
+print(arr0[-1]+arr0[-2]+arr0[-3])
