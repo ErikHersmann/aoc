@@ -8,8 +8,8 @@ others:go, R?, sql???
 
 | day  | python | go | other? |
 | :-------------: |:-------------:| :-----:| :-----:|
-| 0 | [1](aoc_day0.py) |  [1](aoc_day0.go) |[R](aoc_day0.R)|
-| 1 | [1](aoc_day1.py)     | 0 |0 |
+| 0 | [1](day0/aoc_day0.py) |  [1](day0/aoc_day0.go) |[R](day0/aoc_day0.R)|
+| 1 | [1](day1/aoc_day1.py)     | 0 |0 |
 | 2 |      |  | |
 | 3 |      |  |
 | 4 |      |  |
