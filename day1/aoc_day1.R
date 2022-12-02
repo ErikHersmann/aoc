@@ -1,0 +1,6 @@
+library(readr); library(stringi)
+data <- read_file("day1_input.txt")
+hm <- stri_split_lines1(data); hm <- as.numeric(factor(hm))
+points_a <- c(3+1, 6+2, 0+3, 0+1, 3+2, 6+3, 6+1, 0+2, 3+3)
+points_b <- c(0+3, 3+1, 6+2, 0+1, 3+2, 6+3, 0+2, 3+3, 6+1)
+sum(table(hm)*points_a); sum(table(hm)*points_b)
