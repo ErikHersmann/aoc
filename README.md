@@ -8,7 +8,7 @@ others:go, R?
 
 | day  | python | other | other |
 | :-------------: |:-------------:| :-----:| :-----:|
-| 0 | [1](day0/aoc_day0.py) |  [GO](day0/aoc_day0.go) |[R](day0/aoc_day0.R)|
+| 0 | [1](day0/aoc_day0.py) |  [Go](day0/aoc_day0.go) |[R](day0/aoc_day0.R)|
 | 1 | [1](day1/aoc_day1.py)     | 0 |[R](day1/aoc_day1.R) |
 | 2 |      |  | |
 | 3 |      |  |
