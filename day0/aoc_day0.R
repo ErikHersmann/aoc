@@ -1,5 +1,5 @@
 library(readr); library(stringi)
-data <- read_file("input_day0.txt")
+data <- read_file("day0_input.txt")
 hm <- stri_split_lines1(data)
 c = 0; arr0 = c()
 for(i in 1:length(hm)){
