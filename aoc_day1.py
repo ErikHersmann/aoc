@@ -1,4 +1,4 @@
-with open("in.txt", "r") as file:
+with open("day1_input.txt", "r") as file:
     s = file.read().split("\n")
 a,c = 0, 0  
 for i in s:
