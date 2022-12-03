@@ -4,7 +4,7 @@ my solutions for advent of code 2022
 
 mainly: python
 
-others:go, R?
+others:go?, R?
 
 | day  | python | Golang | R |
 | :-------------: |:-------------:| :-----:| :-----:|
