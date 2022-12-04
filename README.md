@@ -8,10 +8,10 @@ others:go?, R?
 
 | day  | python | Golang | R |
 | :-------------: |:-------------:| :-----:| :-----:|
-| 0 | [Py_day0](day0/aoc_day0.py) |  [Go_day0](day0/aoc_day0.go) |[R_day0](day0/aoc_day0.R)|
-| 1 | [Py_day1](day1/aoc_day1.py)   |  |[R_Day1](day1/aoc_day1.R) |
-| 2 | [Py_day2](day2/aoc_day2.py)  |  | |
-| 3 |      |  |
+| 0 | [Py_day0](day0/aoc_day0.py)|  [Go_day0](day0/aoc_day0.go) |[R_day0](day0/aoc_day0.R)|
+| 1 | [Py_day1](day1/aoc_day1.py)|  |[R_Day1](day1/aoc_day1.R) |
+| 2 | [Py_day2](day2/aoc_day2.py)|  | |
+| 3 | [Py_day3](day3/aoc_day3.py)|  |
 | 4 |      |  |
 | 5 |      |  |
 | 6 |      |  |
