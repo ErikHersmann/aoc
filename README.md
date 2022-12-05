@@ -12,7 +12,7 @@ others:go?, R?
 | 1 | [Py_day1](day1/aoc_day1.py)|  |[R_Day1](day1/aoc_day1.R) |
 | 2 | [Py_day2](day2/aoc_day2.py)|  | |
 | 3 | [Py_day3](day3/aoc_day3.py)|  |
-| 4 |      |  |
+| 4 |  Didn't solve it |  |
 | 5 |      |  |
 | 6 |      |  |
 | 7 |      |  |
