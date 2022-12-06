@@ -2,10 +2,7 @@
 
 my solutions for advent of code 2022
 
-mainly: python
-
-others:go?, R?
-
+Im pretty bad  okay
 | day  | python | Golang | R |
 | :-------------: |:-------------:| :-----:| :-----:|
 | 0 | [Py_day0](day0/aoc_day0.py)|  [Go_day0](day0/aoc_day0.go) |[R_day0](day0/aoc_day0.R)|
