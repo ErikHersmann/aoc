@@ -11,7 +11,7 @@ Im pretty bad  okay
 | 3 | [Py_day3](day3/aoc_day3.py)|  |
 | 4 |  Didn't solve it |  |
 | 5 | [Py_day5](day5/aoc_day5.py)|  |
-| 6 |      |  |
+| 6 | Didn't solve it  |  |
 | 7 |      |  |
 | 8 |      |  |
 | 9 |      |  |
