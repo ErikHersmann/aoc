@@ -1,6 +1,6 @@
 # aoc22
 
-my solutions for advent of code 2022
+my solutions for advent of code 2022 (with a timelimit of 30 mins from the start of each day)
 
 Im pretty bad  okay
 | day  | python | Golang | R |
