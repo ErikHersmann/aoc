@@ -12,8 +12,8 @@ Im pretty bad  okay
 | 4 |  Didn't solve it |  |
 | 5 | [Py_day5](day5/aoc_day5.py)|  |
 | 6 | Didn't solve it  |  |
-| 7 |      |  |
-| 8 |      |  |
+| 7 |   Didn't solve it  |  |
+| 8 |   Didn't solve it     |  |
 | 9 |      |  |
 | 10 |      |  |
 | 11 |      |  |
