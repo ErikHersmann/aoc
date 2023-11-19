@@ -1,8 +1,3 @@
-# aoc22
-
-my solutions for advent of code 2022 (with a timelimit of 30 mins from the start of each day)
-
-gave up after day 8
 | day  | 2022 | 2023 | 2024 |
 | :-------------: |:-------------:| :-----:| :-----:|
 | 0 | [Py_day0](day0/aoc_day0.py)|  |    |
