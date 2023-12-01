@@ -1,6 +1,6 @@
 | day  | 2022 | 2023 | 2024 |
 | :-------------: |:-------------:| :-----:| :-----:|
-| 0 | [Py_day0](day0/aoc_day0.py)|  |    |
+| 0 | [Py_day0](day0/aoc_day0.py)| [day-1](2023/day-1.py) |    |
 | 1 | [Py_day1](day1/aoc_day1.py)|  |    |
 | 2 | [Py_day2](day2/aoc_day2.py)|  |    |
 | 3 | [Py_day3](day3/aoc_day3.py)|  |
