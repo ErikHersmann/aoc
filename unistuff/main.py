@@ -4,7 +4,9 @@ from scipy.optimize import minimize
 import numpy as np
 import math
 
-client = wolframalpha.Client("RJW789-RGTATPGUKX")
+with open('env.txt', "r") as f:
+    secret = f.readline().strip()
+client = wolframalpha.Client(secret)
 
 
 def bargaining_game_standard(u1: str, u2: str):
@@ -305,3 +307,4 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
 
 
 
+kalai_smorodinsky((0,0), (1,1), 5)
