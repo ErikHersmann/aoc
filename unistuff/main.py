@@ -65,17 +65,14 @@ def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2
 
     query = f'N[x_1 = {x_1.replace("x_2", x_2)}]'
     print(query)
-
-
     result = client.query(query)
     for pod in result.pods:
         for sub in pod.subpods:
             ctext = sub.plaintext
             cprint(ctext)
-
-
-    # cprint(f"x_1 = {eval(x_1)}", "light_green")
     cprint(f"x_2 = {eval(x_2)}", "light_green")
+
+
 
     cprint("Asymmetric solution:")
     querystring = f'max( ( ({u2} - {d[0]})^({frac2}) ) * ( ({u1.replace("x_1", x_1)} ) - {d[1]} )^({frac1}) )'
@@ -89,7 +86,6 @@ def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2
     cprint(f'x_1: {eval(x_1value)}', 'light_green')
     cprint(f'x_2: {x_2value}', 'light_green')
 
-    # cprint(eval())
 
 
 def ultimatum_bargaining_game(fees, settlement):
@@ -170,33 +166,34 @@ def outside_option(outside: str, d1, d2):
         cprint(f'Equilibrium shares can be paid out since the outside option doesn\'t matter\nPlayer 1 has to offer: ({x_1}, {x_2})', 'light_green')
 
 
-def infinite_bargaining_limited_divisions(d1, d2):
+def infinite_bargaining_limited_divisions(d1, d2, size):
     """
     Consider a bargaing game with alternating offers with two players: In each round, one player makes a proposal how to divide a pie of size 1. Divisions are denoted (x1,x2)
     where x1 and x2 are the shares of the two players. Player 1 has a constant discount rate of δ1=710 and player 2 has a constant discount rate of δ2=910. Different from the standard model, we consider the case where the pie can only be divided into ten many pieces of equal size.
     Each of the two players can only obtain either no piece of the pie at all, or one piece of size 1/10, or two pieces of size 1/10, … , up to all the ten pieces each of size 1/10. Other divisions are not possible.
     """
+    sep = "\t | "
     d1, d2 = map(eval, [d1, d2])
     cprint('Draw the table and check which columns have the same top and bottom row value and then take the min / max out of that set', 'light_green')
 
     cprint("player 1 share in t-0|", end="\t", color="light_red")
-    print(" | ".join([str(x) for x in range(10)])) 
+    print(sep.join([str(x) for x in range(size+1)])) 
 
     cprint("player 1 accpt in t-1|", end="\t", color="light_red")
-    print(" | ".join([str(math.ceil(x*d1)) for x in range(10)])) 
+    print(sep.join([str(math.ceil(x*d1)) for x in range(size+1)])) 
 
     cprint("player 2 share in t-1|", end="\t", color="light_red")
-    temp = [9 - math.ceil(x*d1) for x in range(10)]
-    print(" | ".join([str(x) for x in temp])) 
+    temp = [size - math.ceil(x*d1) for x in range(size+1)]
+    print(sep.join([str(x) for x in temp])) 
 
     cprint("player 2 accpt in t-2|", end="\t", color="light_red")
     temp = [math.ceil(x*d2) for x in temp]
-    print(" | ".join([str(x) for x in temp])) 
+    print(sep.join([str(x) for x in temp])) 
 
     cprint("player 1 share in t-2|", end="\t", color="light_red")
-    temp = [str(9 - x) for x in temp]
-    print(" | ".join(temp)) 
-    cprint(", ".join([value for value, num in zip(temp, [str(x) for x in range(10)]) if value == num]), 'light_green')
+    temp = [str(size - x) for x in temp]
+    print(sep.join(temp)) 
+    cprint(", ".join([value for value, num in zip(temp, [str(x) for x in range(size+1)]) if value == num]), 'light_green')
 
 
 def infinite_bargaining_ne_standard_find_q(x1, d1, d2):
@@ -304,7 +301,13 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
     U2_opt = U2(x1_opt, x2_opt)
     cprint(f'x1: {x1_opt}\nx2: {x2_opt}\nu(x1): {U1_opt}\nu(x2): {U2_opt}', 'light_green')
 
+# To do by hand:
+    # Vector Task 
+    # Find the smallest Q for 3x3 Table and In which round do players agree :
+        # Smallest q = discount factor of player x to the power of 2
+        # if q is 1 it ends in round 1 else in round of player x proposal
 
 
 
-kalai_smorodinsky((0,0), (1,1), 5)
+# clean up symm asymm maybe ?
+symmetric_asymmetric_nash_bargaining_solution()
