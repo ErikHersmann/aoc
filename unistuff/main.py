@@ -38,7 +38,7 @@ def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2
     """
     cprint("Symmetric solution:")
     query = const.replace("x1", "x_1").replace("x2", "x_2").replace("≤", "=")
-    print(query)
+    print(query); pyperclip.copy(query)
     try :
         result = client.query(query)
         for pod in result.pods:
@@ -50,37 +50,57 @@ def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2
     except:
         x_1 = input("Enter x_1:\n")
             
+    # cprint(f'x_1 = {eval(x_1)}', "light_green")
     query = f'N[max( ({u2}-{d[0]}) * ( ({u1.replace("x_1", x_1)} ) - {d[1]} ))]'
-    print(query)
+    print(query); pyperclip.copy(query)
     try:
         result = client.query(query)
         for pod in result.pods:
             for sub in pod.subpods:
                 ctext = sub.plaintext
                 if ctext and "at x_2" in ctext:
-                    cprint(ctext, "light_green")
+                    cprint(ctext, "blue")
                     x_2 = ctext.split("=")[-1].strip()
     except:
         x_2 = input("Enter x_2:\n")
 
     query = f'N[x_1 = {x_1.replace("x_2", x_2)}]'
-    print(query)
-    result = client.query(query)
-    for pod in result.pods:
-        for sub in pod.subpods:
-            ctext = sub.plaintext
-            cprint(ctext)
+    print(query); pyperclip.copy(query)
+    try:
+        result = client.query(query)
+        for pod in result.pods:
+            for sub in pod.subpods:
+                ctext = sub.plaintext
+                cprint(ctext)
+                if ctext and "x_1 = " in ctext:
+                    x_1a = ctext.split('x_1 = ')[-1].strip()
+    except:
+        cprint('Enter query yourself')
+
+    cprint(f"x_1 = {eval(x_1a)}", "light_green")
     cprint(f"x_2 = {eval(x_2)}", "light_green")
 
 
 
     cprint("Asymmetric solution:")
-    querystring = f'max( ( ({u2} - {d[0]})^({frac2}) ) * ( ({u1.replace("x_1", x_1)} ) - {d[1]} )^({frac1}) )'
-    pyperclip.copy(querystring)
-    query = f'Enter the following in wolframalpha:\nx_2: ' + querystring
-    cprint(query)
-    cprint(f'x_1: {x_1}')
-    x_2value = float(input("Enter x_2 value\n").strip())
+    query = f'max( ( ({u2} - {d[0]})^({frac2}) ) * ( ({u1.replace("x_1", x_1)} ) - {d[1]} )^({frac1}) )'
+    cprint(query); pyperclip.copy(query)
+
+    
+    try:
+        cprint(f'x_1: {x_1}')
+        result = client.query(query)
+        for pod in result.pods:
+            for sub in pod.subpods:
+                ctext = sub.plaintext
+                if ctext and "x_2 = " in ctext:
+                    cprint(ctext, 'blue')
+                    x_2value = eval(ctext.split('= ')[-1].strip())
+                else:
+                    cprint(ctext)
+    except:
+        x_2value = float(input("Enter x_2 value\n").strip())
+
     x_1value = x_1.replace("x_2", " * " + str(x_2value)).replace("(", " * (")
     cprint(x_1value)
     cprint(f'x_1: {eval(x_1value)}', 'light_green')
@@ -308,6 +328,3 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
         # if q is 1 it ends in round 1 else in round of player x proposal
 
 
-
-# clean up symm asymm maybe ?
-symmetric_asymmetric_nash_bargaining_solution()
