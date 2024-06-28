@@ -30,12 +30,15 @@ def bargaining_game_standard(u1: str, u2: str):
     cprint(f"x = {x}\ny = {y}", "light_green")
 
 
-def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2):
+def symmetric_asymmetric_nash_bargaining_solution(const, frac1, frac2):
     """
     Args: ("9x1+8x2≤39", (0,0), "x_1", "x_2", "2/3", "1/3")
     Determine first the (symmetric) Nash bargaining solution, i.e.
     Next consider the asymmetric Nash bargaining solution.
     """
+    d = (0,0)
+    u1 = "x_1"
+    u2 = "x_2"
     cprint("Symmetric solution:")
     query = const.replace("x1", "x_1").replace("x2", "x_2").replace("≤", "=")
     print(query); pyperclip.copy(query)
@@ -107,7 +110,6 @@ def symmetric_asymmetric_nash_bargaining_solution(const, d, u1, u2, frac1, frac2
     cprint(f'x_2: {x_2value}', 'light_green')
 
 
-
 def ultimatum_bargaining_game(fees, settlement):
     """
     Consider the following conflict among tenant and landlord about a deposit: When the rental agreement starts, the tenant leaves a deposit of 63 with the landlord. On termination of the rental agreement, the landlord returns y. The returned amount y is either the full deposit or a fraction: y ∈
@@ -115,8 +117,10 @@ def ultimatum_bargaining_game(fees, settlement):
     """
     d2 = settlement - fees
     cprint(f'a)\nIf the offer is greater or equal {d2} (Condition for tenant) and\nLess or equal to {settlement} (Landlord condition) its a nash equilbrium')
+    cprint(f'{d2} <= x <= {settlement}', "light_green")
 
     cprint(f'b)\nIf the offer is equal to {d2} its a SPE')
+    cprint(f'{d2} = x', "light_green")
 
 
 def three_player_pie_division(total, d):
@@ -192,7 +196,7 @@ def infinite_bargaining_limited_divisions(d1, d2, size):
     where x1 and x2 are the shares of the two players. Player 1 has a constant discount rate of δ1=710 and player 2 has a constant discount rate of δ2=910. Different from the standard model, we consider the case where the pie can only be divided into ten many pieces of equal size.
     Each of the two players can only obtain either no piece of the pie at all, or one piece of size 1/10, or two pieces of size 1/10, … , up to all the ten pieces each of size 1/10. Other divisions are not possible.
     """
-    sep = "\t | "
+    sep = " | "
     d1, d2 = map(eval, [d1, d2])
     cprint('Draw the table and check which columns have the same top and bottom row value and then take the min / max out of that set', 'light_green')
 
@@ -216,7 +220,7 @@ def infinite_bargaining_limited_divisions(d1, d2, size):
     cprint(", ".join([value for value, num in zip(temp, [str(x) for x in range(size+1)]) if value == num]), 'light_green')
 
 
-def infinite_bargaining_ne_standard_find_q(x1, d1, d2):
+def infinite_bargaining_ne_standard_find_largest_q(x1, d1, d2):
     """
     Consider the standard bargaing game with alternating offers with two players: In each round, one player makes a proposal how to divide a pie of size 1. Divisions are denoted (x1,x2) where x1 and x2 are the shares of the two players. Player 1 has a constant discount rate of δ1=8/9
     and player 2 has a constant discount rate of δ2=9/10
@@ -231,6 +235,7 @@ def infinite_bargaining_ne_standard_find_q(x1, d1, d2):
     preq = x1 * (1 / d1)
     cprint(f'Q <= {x1} * {d1}^(-1) = {preq}')
     cprint(f'Check the following: {d2}*{1-preq} <  {1-x1}\n{d2 * (1-preq)} < {1-x1} is {d2 * (1-preq) < 1-x1}')
+    cprint(f'Q = {preq}', "light_green")
 
 
 def infinite_bargaining_spe_standard(d1, d2):
@@ -321,6 +326,28 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
     U2_opt = U2(x1_opt, x2_opt)
     cprint(f'x1: {x1_opt}\nx2: {x2_opt}\nu(x1): {U1_opt}\nu(x2): {U2_opt}', 'light_green')
 
+
+def market_equilibrium(B, S, delta, model= "A"):
+    """
+    Where Model A is a steady market with fresh sellers and buyers each period
+    Model B is the depleting market
+    """
+    delta = eval(delta)
+    if model == "A":
+        if B == S or delta == 0.5:
+            cprint(0.5, 'light_green')
+        elif B > S:
+            cprint(1 / (2 - delta + ((S/B) * delta)), 'light_green')
+        elif B < S:
+            cprint(1 - (1 / (2 - delta + ((B/S) * delta))), 'light_green')
+    else:
+        if B == S or delta == 0.5:
+            cprint(0.5, 'light_green')
+        elif B > S:
+            cprint((1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1))), 'light_green')
+        elif B < S:
+            cprint("well", 'light_red')
+
 # To do by hand:
     # Vector Task 
     # Find the smallest Q for 3x3 Table and In which round do players agree :
@@ -328,3 +355,9 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
         # if q is 1 it ends in round 1 else in round of player x proposal
 
 
+# print(eval("/")**2)
+
+
+
+market_equilibrium(12, 17, '3/4')
+# ultimatum_bargaining_game(10, 30)
