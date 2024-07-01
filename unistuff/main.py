@@ -236,7 +236,7 @@ def find_largest_q(x1, d1, d2):
     cprint(f'Q <= {x1} * {d1}^(-1) = {preq}')
     cprint(f'Check the following: {d2}*{1-preq} <  {1-x1}\n{d2 * (1-preq)} < {1-x1} is {d2 * (1-preq) < 1-x1}')
     cprint(f'Q = {preq}', "light_green")
-    pyperclip.copy(preq)
+    pyperclip.copy(str(preq).replace(".", ","))
 
 
 def infinite_bargaining_spe_standard(d1, d2):
@@ -331,7 +331,6 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
 
 
 def find_smallest_q(fraction):
-    fraction = "9/10"
     fraction = eval(fraction)**2
     fraction = str(fraction).replace(".", ",")
     cprint(f'Best reponse for value Q: {fraction}', "light_green")
@@ -349,19 +348,37 @@ def market_equilibrium(B, S, delta, model= "A"):
             cprint(0.5, 'light_green')
             pyperclip.copy("0,5")
         elif B > S:
+            result = 1 / (2 - delta + ((S/B) * delta))
             cprint(1 / (2 - delta + ((S/B) * delta)), 'light_green')
-            pyperclip.copy(1 / (2 - delta + ((S/B) * delta)))
+            pyperclip.copy(str(result).replace(".", ","))
         elif B < S:
+            result = 1 - (1 / (2 - delta + ((B/S) * delta)))
             cprint(1 - (1 / (2 - delta + ((B/S) * delta))), 'light_green')
-            pyperclip.copy(1 - (1 / (2 - delta + ((B/S) * delta))))
+            pyperclip.copy(str(result).replace(".", ","))
+
     else:
         if B == S or delta == 0.5:
             cprint(0.5, 'light_green')
             pyperclip.copy("0,5")
         elif B > S:
+            result = (1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1)))
             cprint((1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1))), 'light_green')
-            pyperclip.copy(1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1)))
+            pyperclip.copy(str(result).replace(".", ","))
         elif B < S:
             cprint("well", 'light_red')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
