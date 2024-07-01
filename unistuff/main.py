@@ -123,7 +123,7 @@ def ultimatum_bargaining_game(fees, settlement):
     cprint(f'{d2} = x', "light_green")
 
 
-def three_player_pie_division(total, d):
+def three_player_bargaining(total, d):
     maxd = max(d)
     d = [maxd - value for value in d]
     # print(f'23 = a + b + c')
@@ -131,7 +131,7 @@ def three_player_pie_division(total, d):
         print(f'player {idx+1}: {((total + sum(d)) / 3) - player}')
 
 
-def bargaining_cost_of_delay(c1, c2):
+def cost_of_delay(c1, c2):
     if eval(c1) < eval(c2):
         cprint(f'Since the delay-factor is bigger for player 2: (1, 0) in round 1')
     elif eval(c2) < eval(c1):
@@ -190,7 +190,7 @@ def outside_option(outside: str, d1, d2):
         cprint(f'Equilibrium shares can be paid out since the outside option doesn\'t matter\nPlayer 1 has to offer: ({x_1}, {x_2})', 'light_green')
 
 
-def infinite_bargaining_limited_divisions(d1, d2, size):
+def limited_divisions(d1, d2, size):
     """
     Consider a bargaing game with alternating offers with two players: In each round, one player makes a proposal how to divide a pie of size 1. Divisions are denoted (x1,x2)
     where x1 and x2 are the shares of the two players. Player 1 has a constant discount rate of δ1=710 and player 2 has a constant discount rate of δ2=910. Different from the standard model, we consider the case where the pie can only be divided into ten many pieces of equal size.
@@ -220,7 +220,7 @@ def infinite_bargaining_limited_divisions(d1, d2, size):
     cprint(", ".join([value for value, num in zip(temp, [str(x) for x in range(size+1)]) if value == num]), 'light_green')
 
 
-def infinite_bargaining_ne_standard_find_largest_q(x1, d1, d2):
+def find_largest_q(x1, d1, d2):
     """
     Consider the standard bargaing game with alternating offers with two players: In each round, one player makes a proposal how to divide a pie of size 1. Divisions are denoted (x1,x2) where x1 and x2 are the shares of the two players. Player 1 has a constant discount rate of δ1=8/9
     and player 2 has a constant discount rate of δ2=9/10
@@ -236,6 +236,7 @@ def infinite_bargaining_ne_standard_find_largest_q(x1, d1, d2):
     cprint(f'Q <= {x1} * {d1}^(-1) = {preq}')
     cprint(f'Check the following: {d2}*{1-preq} <  {1-x1}\n{d2 * (1-preq)} < {1-x1} is {d2 * (1-preq) < 1-x1}')
     cprint(f'Q = {preq}', "light_green")
+    pyperclip.copy(preq)
 
 
 def infinite_bargaining_spe_standard(d1, d2):
@@ -246,8 +247,10 @@ def infinite_bargaining_spe_standard(d1, d2):
     d1 = eval(d1)
     d2 = eval(d2)
 
-    cprint(f'x_1: {(d2 - 1) / (d1*d2 - 1)}', 'light_green')
-    cprint(f'x_2: {1 - ((d2 - 1) / (d1*d2 - 1))}')
+    x1 = (d2 - 1) / (d1*d2 - 1)
+    cprint(f'x_1: {x1}', 'light_green')
+    pyperclip.copy(str(x1).replace(".", ","))
+    cprint(f'x_2: {1 - x1}')
     y_1 = (d1*(d2 - 1)) / (d1*d2 - 1)
     cprint(f'y_1: {y_1}')
     cprint(f'y_2: {1 - y_1}')
@@ -327,6 +330,14 @@ def economy_nash_bargaining_correct(u1_str, u2_str, d, eff1, eff2):
     cprint(f'x1: {x1_opt}\nx2: {x2_opt}\nu(x1): {U1_opt}\nu(x2): {U2_opt}', 'light_green')
 
 
+def find_smallest_q(fraction):
+    fraction = "9/10"
+    fraction = eval(fraction)**2
+    fraction = str(fraction).replace(".", ",")
+    cprint(f'Best reponse for value Q: {fraction}', "light_green")
+    pyperclip.copy(fraction)
+
+
 def market_equilibrium(B, S, delta, model= "A"):
     """
     Where Model A is a steady market with fresh sellers and buyers each period
@@ -336,28 +347,21 @@ def market_equilibrium(B, S, delta, model= "A"):
     if model == "A":
         if B == S or delta == 0.5:
             cprint(0.5, 'light_green')
+            pyperclip.copy("0,5")
         elif B > S:
             cprint(1 / (2 - delta + ((S/B) * delta)), 'light_green')
+            pyperclip.copy(1 / (2 - delta + ((S/B) * delta)))
         elif B < S:
             cprint(1 - (1 / (2 - delta + ((B/S) * delta))), 'light_green')
+            pyperclip.copy(1 - (1 / (2 - delta + ((B/S) * delta))))
     else:
         if B == S or delta == 0.5:
             cprint(0.5, 'light_green')
+            pyperclip.copy("0,5")
         elif B > S:
             cprint((1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1))), 'light_green')
+            pyperclip.copy(1 - delta / (B-S+1)) / (2 - delta - (delta / (B-S+1)))
         elif B < S:
             cprint("well", 'light_red')
 
-# To do by hand:
-    # Vector Task 
-    # Find the smallest Q for 3x3 Table and In which round do players agree :
-        # Smallest q = discount factor of player x to the power of 2
-        # if q is 1 it ends in round 1 else in round of player x proposal
 
-
-# print(eval("/")**2)
-
-
-
-market_equilibrium(12, 17, '3/4')
-# ultimatum_bargaining_game(10, 30)
