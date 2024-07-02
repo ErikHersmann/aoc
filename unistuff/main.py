@@ -116,11 +116,9 @@ def ultimatum_bargaining_game(fees, settlement):
     [0, 63]. The tenant can accept or refuse the landlord’s oﬀer of y. If the tenant refuses, then the tenant goes to court. In this case the tenant bears a non-refundable cost of 13 (litigation fees). The court then settles the case, i.e. decides that the landlord must return the amount of 21 to the tenant. Both parties, the landlord and the tenant, know that the court always awards the tenant 21, i.e. both know how the court will settle the case
     """
     d2 = settlement - fees
-    cprint(f'a)\nIf the offer is greater or equal {d2} (Condition for tenant) and\nLess or equal to {settlement} (Landlord condition) its a nash equilbrium')
+    cprint(f'a)\nOption has to be [offer = acceptance] treshold else not a SPE', 'light_red')
     cprint(f'{d2} <= x <= {settlement}', "light_green")
-
-    cprint(f'b)\nIf the offer is equal to {d2} its a SPE')
-    cprint(f'{d2} = x', "light_green")
+    cprint(f'b)\n{d2} = x', "light_green")
 
 
 def three_player_bargaining(total, d):
