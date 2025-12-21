@@ -1,5 +1,6 @@
 with open("input.txt", "r") as f:
-    problem_data = f.read().strip()
+    # Some description
+    problem_data = f.read().strip() # type: str
 with open("test1.txt", "r") as f:
     test_data = f.read().strip()
 with open("test2.txt", "r") as f:
