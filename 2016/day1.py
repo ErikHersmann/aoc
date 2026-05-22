@@ -1,26 +1,34 @@
-from email.mime import base
-from enum import verify
+from helper import problem_data
 
-from click import version_option
-from helper import inp
+x_dir = 0 
+y_dir = 0 
+left = {"N": "W", "W": "S", "S": "E", "E": "N"}
+right = {"N": "E", "E": "S", "S": "W", "W": "N"}
+current_direction = "N"
 
-# data = inp
-num = 23
-
-# Find closest uneven square that is smaller
-# Find closest corner and calculate offset the result would be
-# base uneven square + offset from horizontal or vertical (aka closest corner)
-
-base_square = 1
-while base_square**2 < num:
-    base_square += 2
-base_square -= 2
-corner = 3
-for corner_idx in range(4):
-    center = base_square**2 + corner_idx*base_square + base_square//2 + 1 + 
-    if base_square**2 + (corner_idx*base_square) > num:
-        corner = corner_idx-1
-        break
-vertical = base_square
-horizontal = (num -  (base_square**2 + (corner*base_square) + base_square//2))
-print(horizontal + vertical)
+visited = set()
+found = False
+for instruction in problem_data.split(", "):
+    direction = instruction[0]
+    number = int(instruction[1:])
+    current_direction = left[current_direction] if direction == "L" else right[current_direction]
+    x_inc, y_inc = 0, 0
+    match current_direction:
+        case "N":
+            y_inc = 1
+        case "E":
+            x_inc = 1
+        case "W":
+            x_inc = -1
+        case "S":
+            y_inc = -1
+    for i in range(number):
+        x_dir += x_inc
+        y_dir += y_inc
+        pos = (x_dir, y_dir)
+        if not found and pos in visited:
+            print(f"Part 2: {abs(x_dir) + abs(y_dir)}")
+            found = True
+        visited.add(pos)
+    
+print(f"Part 1: {abs(x_dir) + abs(y_dir)}")
