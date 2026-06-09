@@ -38,5 +38,5 @@ while pointer < len(problem_data):
             if is_garbage:
                 garbage_counter += 1
     pointer += 1
-print(score)
-print(garbage_score)
+print(f"Part 1: {score}")
+print(f"Part 2: {garbage_score}")
