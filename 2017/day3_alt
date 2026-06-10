@@ -1,1 +1,0 @@
-print(f"Part 1: {abs((n:=325489)-([x for i in range(4)if(x:=(l:=(f**2 if(f:=int(n**0.5))%2 else(f:=f-1)**2))+(s:=((f+2)**2-l)//4)*i)<n][-1]+s//2))+((f+1)//2)}")
