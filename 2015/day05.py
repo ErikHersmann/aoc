@@ -52,5 +52,5 @@ for s in problem_data.splitlines():
     if is_nice(False, s):
         res2 += 1
 
-print(res1)
-print(res2)
+print(f"Part 1: {res1}")
+print(f"Part 2: {res2}")
