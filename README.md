@@ -17,7 +17,13 @@
 Total stars: 149*/524*
 
 2015:
-- Resolve day 18
-- Cleanup all days to yield output in format: 
-```Part 1: <result part 1>```
-```Part 2: <result part 2>```
+Days to cleanup TODO:
+- day 6
+- day 7
+- day 9
+- day 13
+- day 15 ???
+- day 17
+- day 19
+- day 22 ???
+- day 24
