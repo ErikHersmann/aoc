@@ -96,9 +96,21 @@ def dp(
             player_hp-1,
             boss_hp - 4,
         )
+    # else:
+    #     dp(
+    #         poison,
+    #         recharge,
+    #         shielding,
+    #         current_mana,
+    #         total_mana_spent,
+    #         player_hp-1,
+    #         boss_hp,
+    #     )
 
 # I just varied the hp to 55 LO
-dp(0, 0, 0, 500, 0, 55, 51)
-print(best[0])
+for c in range(46, 70):
+    best = [maxsize]
+    dp(0, 0, 0, 500, 0, c, 51)
+    print(c, best[0])
 
 # 1256 is too high
