@@ -17,8 +17,7 @@
 Total stars: 149*/524*
 
 2015:
-- Resolve days 1-4
-- Resolve day 16
+- Resolve day 16 + 18
 - Cleanup all days to yield output in format: 
 ```Part 1: <result part 1>```
 ```Part 2: <result part 2>```
