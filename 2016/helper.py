@@ -1,8 +1,10 @@
-with open("input.txt", "r") as f:
-    problem_data = f.read().strip()
-
-# with open("test1.txt", "r") as f:
-#     short_test = f.read().strip()
-
-# with open("test2.txt", "r") as f:
-#     long_test = f.read().strip()
+try:
+    with open("input.txt", "r") as f:
+        # Some description
+        problem_data = f.read().strip() # type: str
+except:
+    with open("2016/input.txt", "r") as f:
+        # Some description
+        problem_data = f.read().strip() # type: str
+def throw():
+    raise Exception("Unreachable code detected")
