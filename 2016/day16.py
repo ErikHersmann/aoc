@@ -22,4 +22,4 @@ problem_data = problem_data[:length]
 while len(problem_data) % 2 == 0:
     problem_data = checksum(problem_data)
 
-print(problem_data)
+print(f"Part 2: {problem_data}")
