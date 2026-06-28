@@ -6,7 +6,7 @@ try:
         # Some description
         problem_data = f.read().strip()  # type: str
 except:
-    with open("2016/input.txt", "r") as f:
+    with open("advent_of_code/2016/input.txt", "r") as f:
         # Some description
         problem_data = f.read().strip()  # type: str
 
