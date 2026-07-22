@@ -2,7 +2,6 @@ use std::{
     collections::{HashMap, VecDeque},
 };
 
-#[derive(Debug)]
 struct LFUCache {
     // This is key: (value, count)
     cache: HashMap<i32, (i32, usize)>,
