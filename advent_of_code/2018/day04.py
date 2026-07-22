@@ -1,0 +1,1 @@
+# Sort by timestamp calculate totals and track minute dictionary per guard
