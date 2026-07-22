@@ -1,7 +1,6 @@
 use core::panic;
 use std::{
     collections::{HashMap, VecDeque},
-    ops::Index,
     vec,
 };
 
@@ -23,7 +22,6 @@ impl LFUCache {
     }
 
     fn get(&mut self, key: i32) -> i32 {
-        self.debug(&format!("before get {}", &key.to_string()));
         match self.cache.get(&key).cloned() {
             Some(value) => {
                 self.bump_use_count(key);
@@ -59,15 +57,16 @@ impl LFUCache {
     fn bump_use_count(&mut self, key: i32) {
         let count = self.cache[&key].1;
         match self.counts.get_mut(&count) {
-            None => panic!("did not expect to be in here count: {}", count),
+            None => (),
             Some(arr) => {
-                println!("array in bump use count {:?} removing key {}", arr, key);
-                arr.remove(
-                    *(arr.iter().find(|&x| *x == key))
-                        .expect(&format!("Expected to find {} in counts", key))
-                        as usize,
-                );
-                println!("array in bump use count {:?} after removing key {}", arr, key);
+                let mut index_to_remove: usize = 0;
+                for (index, index_value) in arr.iter().enumerate() {
+                    if index_value == &key {
+                        index_to_remove = index;
+                        break;
+                    }
+                }
+                arr.remove(index_to_remove);
             }
         }
         match self.cache.get_mut(&key) {
@@ -89,13 +88,12 @@ impl LFUCache {
 
     fn update_key(&mut self, key: i32, value: i32) {
         match self.cache.get_mut(&key) {
-            None => return,
+            None => (),
             Some(value_and_count) => {
                 value_and_count.0 = value;
-                value_and_count.1 += 1;
-                return;
             }
         }
+        self.bump_use_count(key);
     }
 
     fn insert_key(&mut self, key: i32, value: i32) {
@@ -116,18 +114,11 @@ impl LFUCache {
 
     fn replace_key(&mut self, key: i32, value: i32) {
         let lfu_key: i32 = self.get_lfu_key();
-        println!("lfu key {}", lfu_key);
         self.cache.remove(&lfu_key);
         self.insert_key(key, value);
-        return;
-    }
-    fn debug(&self, msg: &str) {
-        println!("{} (cache){:?}", msg, self.cache);
-        println!("{} (counts){:?}", msg, self.counts);
     }
 
     fn put(&mut self, key: i32, value: i32) {
-        self.debug(&format!("before put {}", &key.to_string()));
         if self.cache.contains_key(&key) {
             self.update_key(key, value);
             return;
