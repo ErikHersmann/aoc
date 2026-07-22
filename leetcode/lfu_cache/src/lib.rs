@@ -1,7 +1,5 @@
-use core::panic;
 use std::{
     collections::{HashMap, VecDeque},
-    vec,
 };
 
 #[derive(Debug)]
@@ -15,7 +13,7 @@ struct LFUCache {
 impl LFUCache {
     fn new(capacity: i32) -> Self {
         return LFUCache {
-            cache: HashMap::new(),
+            cache: HashMap::with_capacity( capacity as usize),
             counts: HashMap::new(),
             capacity: capacity,
         };
@@ -46,7 +44,7 @@ impl LFUCache {
         }
 
         match self.counts.get_mut(&rank) {
-            None => panic!(),
+            None => -1,
             Some(lowest_rank_array) => {
                 return lowest_rank_array
                     .pop_front()
@@ -59,14 +57,12 @@ impl LFUCache {
         match self.counts.get_mut(&count) {
             None => (),
             Some(arr) => {
-                let mut index_to_remove: usize = 0;
                 for (index, index_value) in arr.iter().enumerate() {
                     if index_value == &key {
-                        index_to_remove = index;
+                        arr.remove(index);
                         break;
                     }
                 }
-                arr.remove(index_to_remove);
             }
         }
         match self.cache.get_mut(&key) {
@@ -76,7 +72,7 @@ impl LFUCache {
             }
         }
         if !self.counts.contains_key(&(count + 1)) {
-            self.counts.insert(count + 1, VecDeque::new());
+            self.counts.insert(count + 1, VecDeque::with_capacity(150));
         }
         match self.counts.get_mut(&(count + 1)) {
             None => (),
@@ -101,8 +97,10 @@ impl LFUCache {
         let first_key: usize = 1 as usize;
         match self.counts.get_mut(&first_key) {
             None => {
+                let mut dq : VecDeque<i32> = VecDeque::with_capacity(150);
+                dq.push_back(key);
                 self.counts
-                    .insert(first_key, VecDeque::from_iter(vec![key]));
+                    .insert(first_key, dq);
                 return;
             }
             Some(arr) => {
