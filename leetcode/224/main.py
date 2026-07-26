@@ -1,6 +1,6 @@
 from collections import deque
 
-
+# TODO: We only  need to use a stack for negated brackets, otherwise we immediately resolve 
 class Solution:
     def resolve_stack(self, temp):
         if type(temp) == str and len(temp) == 0:
