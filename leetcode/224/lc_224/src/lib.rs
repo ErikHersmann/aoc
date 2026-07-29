@@ -8,7 +8,7 @@ impl Solution {
         let mut next_number_is_negated: bool = false;
         let mut total: i32 = 0;
         let input_string: Vec<char> = s.chars().collect();
-        let n = input_string.len();
+        let n: usize = input_string.len();
         while pointer < n {
             match input_string[pointer] {
                 ')' => {
@@ -17,49 +17,43 @@ impl Solution {
                     {
                         is_negated = !is_negated;
                     }
-                    pointer += 1;
                 }
                 '(' => {
+                    negation.push_back(!next_number_is_negated);
                     if next_number_is_negated {
-                        negation.push_back(false);
                         is_negated = !is_negated;
-                        next_number_is_negated = false;
-                    } else {
-                        negation.push_back(true);
                     }
-                    pointer += 1;
-                }
-                '+' | ' ' => {
-                    pointer += 1;
+                    next_number_is_negated = false;
                 }
                 '-' => {
                     next_number_is_negated = true;
-                    pointer += 1;
+                }
+                '+' | ' ' => {
                 }
                 _ => {
-                    let mut temp: Vec<char> = vec![];
+                    let start_pointer = pointer;
                     while pointer < n && input_string[pointer].is_numeric() {
-                        temp.push(input_string[pointer]);
                         pointer += 1;
                     }
-                    let num: usize = temp
+                    total += input_string
                         .iter()
+                        .skip(start_pointer)
+                        .take_while(|x| x.is_numeric())
                         .enumerate()
                         .map(|(idx, &c)| {
-                            ((10 as usize).pow((temp.len() - idx - 1) as u32))
-                                * (c.to_digit(10).expect("Cast failed") as usize)
+                            ((10_u32).pow(((pointer - start_pointer) - idx - 1) as u32))
+                                * c.to_digit(10).expect("Cast failed")
                         })
-                        .sum();
-                    // println!("{:?},numeric: {}", temp, num);
-                    if is_negated ^ next_number_is_negated {
-                        total -= num as i32;
-                    } else {
-                        total += num as i32;
-                    }
+                        .sum::<u32>() as i32
+                        * match is_negated ^ next_number_is_negated {
+                            false => 1,
+                            true => -1,
+                        };
                     next_number_is_negated = false;
                     continue;
                 }
             }
+            pointer += 1;
         }
         return total;
     }
