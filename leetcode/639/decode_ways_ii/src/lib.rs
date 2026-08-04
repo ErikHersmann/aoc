@@ -1,9 +1,9 @@
 impl Solution {
     pub fn num_decodings(s: String) -> i32 {
         const MOD: u64 = 10_u64.pow(9) + 7;
-        let chars: Vec<u8> = s.into_bytes();
-        let n = chars.len();
-        let mut prev: u64 = match chars[n - 1] {
+        let bytes: Vec<u8> = s.into_bytes();
+        let n = bytes.len();
+        let mut prev: u64 = match bytes[n - 1] {
             b'*' => 9,
             b'0' => 0,
             _ => 1,
@@ -12,17 +12,17 @@ impl Solution {
         for pointer in (0..n - 1).rev() {
             (prev_prev, prev) = (
                 prev,
-                (((match chars[pointer] {
+                (((match bytes[pointer] {
                     b'*' => 9,
                     b'0' => 0,
                     _ => 1,
                 }) * prev)
                     % MOD
-                    + (match chars[pointer..pointer + 2] {
-                        [b'*', b'*'] => 15,
-                        [b'1', b'*'] => 9,
-                        [b'2', b'*'] => 6,
-                        [b'*', b'0']
+                    + (match bytes[pointer..pointer + 2] {
+                          [b'*', b'*'] => 15,
+                          [b'1', b'*'] => 9,
+                          [b'2', b'*'] => 6,
+                          [b'*', b'0']
                         | [b'*', b'1']
                         | [b'*', b'2']
                         | [b'*', b'3']
