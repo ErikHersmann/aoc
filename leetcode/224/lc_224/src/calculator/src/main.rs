@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 use std::env;
+use std::time::Instant;
 
 struct Solution {}
 
@@ -62,8 +63,12 @@ impl Solution {
 }
 
 fn main() {
+    let now = Instant::now();
+    let result = Solution::calculate(env::args().collect::<Vec<String>>()[1].clone());
+    let elapsed_time = now.elapsed();
+    println!("Result: {}", result);
     println!(
-        "{}",
-        Solution::calculate(env::args().collect::<Vec<String>>()[0].clone())
+        "Time taken (ms): {:?}",
+        ((elapsed_time.as_nanos() as f64) * 0.000001)
     );
 }

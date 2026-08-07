@@ -1,35 +1,65 @@
 from helper import problem_data
 from collections import deque
+from copy import deepcopy
 
-# Find any valid path through the graph given in problem_data
-problem_data = """Step C must be finished before step A can begin.
-Step C must be finished before step F can begin.
-Step A must be finished before step B can begin.
-Step A must be finished before step D can begin.
-Step B must be finished before step E can begin.
-Step D must be finished before step E can begin.
-Step F must be finished before step E can begin."""
+# TODO: Very much in need of a refactoring
 
-l = []
-no_deps = set()
-has_deps = set()
-deps = [[element for index, element in enumerate(line.split()) if index in [1, 7]] for line in problem_data.splitlines()]
-n = set()
-for left, right in deps:
-    n.add(left)
-    n.add(right)
-n = len(n)
-while len(l) < n:
+
+def part_1():
+    solution = []
+    deps = [
+        [element for index, element in enumerate(line.split()) if index in [1, 7]]
+        for line in problem_data.splitlines()
+    ]
+    unvisited = set()
     for left, right in deps:
-        if left in l:
-            no_deps.add(right)
-            continue
-        if right in no_deps:
-            no_deps.remove(right)
-        if left not in no_deps and left not in has_deps:
-            no_deps.add(left)
-        has_deps.add(right)
-    l.extend(sorted([x for x in no_deps if x not in l]))
-print("".join(l))
-# Make a full pass and append all the ones that don´t have a dependency to a deque
-# CABDFE
+        unvisited.add(left)
+        unvisited.add(right)
+    while len(unvisited) > 0:
+        candidates = deepcopy(unvisited)
+        for left, right in deps:
+            if left in unvisited and right in candidates:
+                candidates.remove(right)
+        candidate = sorted(list(candidates))[0]
+        unvisited.remove(candidate)
+        solution.append(candidate)
+    return "".join(solution)
+
+
+def part_2():
+    solution = []
+    worker_count = 5
+    workers = [0 for _ in range(worker_count)]
+    tasks = ["" for _ in range(worker_count)]
+    deps = [
+        [element for index, element in enumerate(line.split()) if index in [1, 7]]
+        for line in problem_data.splitlines()
+    ]
+    t = -1
+    unvisited = set()
+    for left, right in deps:
+        unvisited.add(left)
+        unvisited.add(right)
+    while len(unvisited) > 0:
+        for idx in range(worker_count):
+            if workers[idx] > 1:
+                workers[idx] -= 1
+            elif workers[idx] == 1:
+                workers[idx] = 0
+                if tasks[idx] in unvisited:
+                    unvisited.remove(tasks[idx])
+                solution.append(candidate)
+                tasks[idx] = ""
+        candidates = deepcopy(unvisited)
+        for left, right in deps:
+            if left in unvisited and right in candidates:
+                candidates.remove(right)
+        candidates = [x for x in sorted(list(candidates)) if x not in tasks]
+        for candidate in candidates:
+            for idx in range(worker_count):
+                if workers[idx] == 0:
+                    workers[idx] += ord(candidate) - ord("A") + 61  # 61
+                    tasks[idx] = candidate
+                    break
+        t += 1
+    return t

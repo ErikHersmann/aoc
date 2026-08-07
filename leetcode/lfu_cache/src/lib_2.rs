@@ -1,4 +1,6 @@
-use std::collections::{HashMap, VecDeque};
+use std::{
+    collections::{HashMap, VecDeque},
+};
 
 struct LFUCache {
     // This is key: (value, count)
@@ -10,7 +12,7 @@ struct LFUCache {
 impl LFUCache {
     fn new(capacity: i32) -> Self {
         return LFUCache {
-            cache: HashMap::with_capacity(capacity as usize),
+            cache: HashMap::with_capacity( capacity as usize),
             counts: HashMap::new(),
             capacity: capacity,
         };
@@ -40,50 +42,28 @@ impl LFUCache {
             rank += 1;
         }
 
-        let key = match self.counts.get_mut(&rank) {
+        match self.counts.get_mut(&rank) {
             None => -1,
             Some(lowest_rank_array) => {
                 return lowest_rank_array
                     .pop_front()
                     .expect("Could not pop from an array");
             }
-        };
-        let mut skip = false;
-        while skip || self.cache.get(&key).expect("Key has to be in map").1 != rank {
-            skip = false;
-            let key = match self.counts.get_mut(&rank) {
-                None => -1,
-                Some(lowest_rank_array) => match lowest_rank_array.pop_front() {
-                    None => {
-                        return -1;
-                    }
-                    Some(potential_key) => {
-                        return potential_key;
-                    }
-                },
-            };
-            if key == -1 {
-                rank += 1;
-                skip = true;
-                continue;
-            }
         }
-        println!("{}", key);
-        return key;
     }
     fn bump_use_count(&mut self, key: i32) {
         let count = self.cache[&key].1;
-        // match self.counts.get_mut(&count) {
-        //     None => (),
-        //     Some(arr) => {
-        //         for (index, index_value) in arr.iter().enumerate() {
-        //             if index_value == &key {
-        //                 arr.remove(index);
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
+        match self.counts.get_mut(&count) {
+            None => (),
+            Some(arr) => {
+                for (index, index_value) in arr.iter().enumerate() {
+                    if index_value == &key {
+                        arr.remove(index);
+                        break;
+                    }
+                }
+            }
+        }
         match self.cache.get_mut(&key) {
             None => (),
             Some(arr) => {
@@ -116,9 +96,10 @@ impl LFUCache {
         let first_key: usize = 1 as usize;
         match self.counts.get_mut(&first_key) {
             None => {
-                let mut dq: VecDeque<i32> = VecDeque::with_capacity(150);
+                let mut dq : VecDeque<i32> = VecDeque::with_capacity(150);
                 dq.push_back(key);
-                self.counts.insert(first_key, dq);
+                self.counts
+                    .insert(first_key, dq);
                 return;
             }
             Some(arr) => {

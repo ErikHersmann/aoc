@@ -1,15 +1,13 @@
 from hashlib import md5
 from sys import maxsize
+from glob import glob
+from os import path as _path
 
-try:
-    with open("input.txt", "r") as f:
-        # Some description
-        problem_data = f.read().strip()  # type: str
-except:
-    with open("advent_of_code/2018/input.txt", "r") as f:
-        # Some description
-        problem_data = f.read().strip()  # type: str
-
+paths = ["advent_of_code/2018/input.txt", "2018/input.txt", "input.txt"]
+for path in paths:
+    if _path.exists(path):
+        with open(path, "r") as f:
+            problem_data = f.read().strip()  # type: str
 
 def throw():
     raise Exception("Unreachable code detected")
