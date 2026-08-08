@@ -44,3 +44,6 @@ def dfs(node, running_sum):
 
 # Can't wrap my head around this
 # maybe this is just dfs 
+
+
+# Push values back onto a stack and if the values dont' match top of stack we are either one level up or it's wrong 
