@@ -8,6 +8,21 @@ for path in paths:
     if _path.exists(path):
         with open(path, "r") as f:
             problem_data = f.read().strip()  # type: str
+        with open(path, "r") as f:
+            unstripped_problem_data = f.read()
+
+UP = (0, -1)
+DOWN = (0, 1)
+RIGHT = (1, 0)
+LEFT = (-1, 0)
+TRANSFORM = {
+    "left": {LEFT: DOWN, RIGHT: UP, DOWN: RIGHT, UP: LEFT},
+    "right": {LEFT: UP, RIGHT: DOWN, DOWN: LEFT, UP: RIGHT},
+    "flip": {LEFT: RIGHT, RIGHT: LEFT, UP: DOWN, DOWN: UP}
+}
+
+
+
 
 def throw():
     raise Exception("Unreachable code detected")
