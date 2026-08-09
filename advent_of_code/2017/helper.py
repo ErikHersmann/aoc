@@ -2,6 +2,7 @@ from hashlib import md5
 from sys import maxsize
 from glob import glob
 from os import path as _path
+from math import sqrt
 
 paths = ["advent_of_code/2017/input.txt", "2017/input.txt", "input.txt"]
 for path in paths:
@@ -11,8 +12,36 @@ for path in paths:
         with open(path, "r") as f:
             unsanitized_problem_data = f.read()
 
+
+
+def flip_square_string_90_degrees_right(string: str):
+    assert sqrt(len(string.replace("\n", ""))).is_integer()
+    columns = string.splitlines()[::-1]
+    output = ""
+    for index in range(len(columns)):
+        output += "".join([col[index] for col in columns]) + "\n"
+    output = output.strip("\n")
+    return output
+
+def flip_square_string_180_degrees_along_horizontal_axis(string: str):
+    assert sqrt(len(string.replace("\n", ""))).is_integer()
+    rows = string.splitlines()[::-1]
+    return "\n".join(rows)
+
+def flip_square_string_180_degrees_along_vertical_axis(string: str):
+    assert sqrt(len(string.replace("\n", ""))).is_integer()
+    output = []
+    for row in string.splitlines():
+        output.append([c for c in row])
+        for col_idx in range(len(row)//2):
+            output[-1][col_idx], output[-1][-col_idx-1] = row[-col_idx-1], row[col_idx]
+        output[-1] = "".join(output[-1])
+    return "\n".join(output)
+
 UP = (0, 1)
+UP_flip = (0, -1)
 DOWN = (0, -1)
+DOWN_flip = (0, 1)
 RIGHT = (1, 0)
 LEFT = (-1, 0)
 TL = (-1, 1)
@@ -21,16 +50,25 @@ TR = (1, 1)
 BR = (1, -1)
 
 
+def is_integer_negative_support(string):
+    try:
+        if string[0] == "-" or string[0] == "+":
+            return (string[1:]).isnumeric()
+        return string.isnumeric()
+    except:
+        return False
+
+
 class DIR:
-    def __init__(self):
-        self.up = (0, 1)
-        self.down = (0, -1)
+    def __init__(self, should_flip_up_down):
+        self.up = (0, 1) if not should_flip_up_down else (0, -1)
+        self.down = (0, -1) if not should_flip_up_down else (0, 1)
         self.right = (1, 0)
         self.left = (-1, 0)
-        self.top_left = (-1, 1)
-        self.bottom_left = (-1, -1)
-        self.top_right = (1, 1)
-        self.bottom_right = (1, -1)
+        self.top_left = (-1, 1) if not should_flip_up_down else (-1, -1)
+        self.bottom_left = (-1, -1) if not should_flip_up_down else (-1, 1)
+        self.top_right = (1, 1) if not should_flip_up_down else (1, -1)
+        self.bottom_right = (1, -1) if not should_flip_up_down else (1, 1)
 
     def apply_transformation(self, relative_to, transformation):
         """Transforms the given direction in relative_to by the transformation direction.
@@ -174,10 +212,12 @@ class DIR:
                         return self.up
 
 
-transform = DIR().apply_transformation
+transform = DIR(False).apply_transformation
+transform_flip = DIR(True).apply_transformation
+
 
 def throw():
-    raise Exception("Unreachaself.BLe code detected")
+    raise Exception("Unreachable code detected")
 
 
 def get_md5_hash(s: sself.TR):
