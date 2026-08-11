@@ -1,17 +1,5 @@
-
-# Advent of Code
-
-#     [About][Events][Shop][Settings][Log Out]
-
-# Erik 33*
-#        y(2017)
-
-#     [Calendar][AoC++][Sponsors][Leaderboards][Stats]
-
-# Our sponsors help make Advent of Code possible:
-# Novetta - Unleash your imagination. Innovate at Novetta.
-# --- Day 23: Coprocessor Conflagration ---
-
+from helper import problem_data, is_integer_negative_support
+from collections import defaultdict
 # You decide to head directly to the CPU and fix the printer from there. As you get close, you find an experimental coprocessor doing so much work that the local programs are afraid it will halt and catch fire. This would cause serious issues for the rest of the computer, so you head in and see what you can do.
 
 # The code it's running seems to be a variant of the kind you saw recently on that tablet. The general functionality seems very similar, but some of the instructions are different:
@@ -27,8 +15,30 @@
 
 # If you run the program (your puzzle input), how many times is the mul instruction invoked?
 
-# To begin, get your puzzle input.
 
-# Answer:
+registers = defaultdict(int)
+registers["a"] = 1
+pointer = 0
+mul_invoked = 0
+instructions = [line.split() for line in problem_data.splitlines()]
+while pointer < len(instructions):
+    inst = instructions[pointer]
+    match inst[0]:
+        case "set":
+            registers[inst[1]] = int(inst[2]) if is_integer_negative_support(inst[2]) else registers[inst[2]]
+            pointer += 1
+        case "sub":
+            registers[inst[1]] -= int(inst[2]) if is_integer_negative_support(inst[2]) else registers[inst[2]]
+            pointer += 1
+        case "mul":
+            registers[inst[1]] *= int(inst[2]) if is_integer_negative_support(inst[2]) else registers[inst[2]]
+            pointer += 1
+            mul_invoked += 1
+        case "jnz":
+            if (0 != (int(inst[1]) if is_integer_negative_support(inst[1]) else registers[inst[1]])):
+                pointer += int(inst[2]) if is_integer_negative_support(inst[2]) else registers[inst[2]]
+            else:
+                pointer += 1
+print(mul_invoked)
 
-# You can also [Shareon Bluesky Twitter Mastodon] this puzzle.
+# If ran to completion what is the value in h
