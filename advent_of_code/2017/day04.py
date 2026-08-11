@@ -57,3 +57,19 @@ if __name__ == "__main__":
     print(
         "1, 1, 2, 4, 5, 10, 11, 23, 25, 26, 54, 57, 59, 122, 133, 142, 147, 304, 330, 351, 362, 747, 806, 880, 931"
     )
+
+
+# from helper import problem_data
+
+# valids = 0
+# valids_2 = 0
+
+
+# for line in problem_data.splitlines():
+#     line = line.split()
+#     valids += len(set(line)) == len(line)
+#     line = ["".join(sorted([c for c in item])) for item in line]
+#     valids_2 += len(set(line)) == len(line)
+
+# print(valids)
+# print(valids_2)
