@@ -1,7 +1,8 @@
 from helper import problem_data
 from collections import deque, defaultdict
 
-l = deque(problem_data.splitlines())
+unvisited = deque(problem_data.splitlines())
+data = problem_data.splitlines()
 
 
 def parent_transform(parent: str):
@@ -11,39 +12,46 @@ def parent_transform(parent: str):
 
 d_flat = defaultdict(list)
 gkids = set()
-while len(l) > 1:
-    cur = l.popleft()
-    if "->" not in cur:
+while len(unvisited) > 1:
+    current_node = unvisited.popleft()
+    if "->" not in current_node:
         continue
-    parent, kids = cur.split(" -> ")
+    parent, kids = current_node.split(" -> ")
     pname, pweight = parent_transform(parent)
     kids = kids.split(", ")
-    dflat[pname] = (pweight, kids)
+    d_flat[pname] = (pweight, kids)
     for kid in kids:
         gkids.add(kid)
     if pname not in gkids:
-        l.append(cur)
-print(l)
-
-# Since we found out the root node from step 1 we can construct the graph in order now
-# After that we run dfs with bfs ? wtfuckery
-
-# d_complex = {}
-
-# q = deque(["hlhomy"])
-# while len(q) > 0:
-#     cached_len = len(q)
-#     for _ in range(cached_len):
-#         cur = q.popleft()
+        unvisited.append(current_node)
+print(f"Part 1: {unvisited.pop().split("(")[0].strip()}")
 
 
-# For that we need a dictionary, I'm about to lose it
-def dfs(node, running_sum):
-    if 
+leaf_nodes = {}
+non_leaf_nodes = deque()
+for line in data:
+    if "->" not in line:
+        n,w = parent_transform(line)
+        assert n not in leaf_nodes
+        leaf_nodes[n] = w
+    else:
+        parent, kids = line.split(" -> ")
+        name, weight = parent_transform(parent)
+        non_leaf_nodes.append((name, weight, kids.split(", ")))
 
+while len(non_leaf_nodes) > 0:
+    cur_non_leaf = non_leaf_nodes.popleft()
+    if all([kid in leaf_nodes for kid in cur_non_leaf[2]]):
+        temp = []
+        for kid in cur_non_leaf[2]:
+            temp.append(leaf_nodes.pop(kid))
+        if len(set(temp)) != 1: print(f"Problematic weight is in here: {temp}, needed abs diff: {max(temp)-min(temp)}")
+        weight = cur_non_leaf[1]+sum(temp)
+        if weight == 1579: # set this to the problematic weight from above
+            print(f"Part 2-ish: {cur_non_leaf[1]}-absolute diff should be the solution")
+            pass
+        leaf_nodes[cur_non_leaf[0]] = weight
+    else:
+        non_leaf_nodes.append(cur_non_leaf)
 
-# Can't wrap my head around this
-# maybe this is just dfs 
-
-
-# Push values back onto a stack and if the values dont' match top of stack we are either one level up or it's wrong 
+# 1513 + 33 + 33 = 1579

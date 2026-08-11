@@ -22,6 +22,7 @@ pointer = 0
 mul_invoked = 0
 instructions = [line.split() for line in problem_data.splitlines()]
 while pointer < len(instructions):
+    print(registers, "\n")
     inst = instructions[pointer]
     match inst[0]:
         case "set":
@@ -40,5 +41,6 @@ while pointer < len(instructions):
             else:
                 pointer += 1
 print(mul_invoked)
+print(registers["h"])
 
 # If ran to completion what is the value in h
