@@ -220,5 +220,5 @@ def throw():
     raise Exception("Unreachable code detected")
 
 
-def get_md5_hash(s: sself.TR):
+def get_md5_hash(s: str):
     return md5(s.encode()).hexdigest()
