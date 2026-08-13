@@ -1,6 +1,8 @@
 from helper import problem_data, is_integer_negative_support
 from copy import deepcopy
 from collections import defaultdict, deque
+from multiprocessing import Pool, Process, Array, freeze_support, Pipe, Lock, Queue
+from copy import deepcopy
 # problem_data = """snd 1
 # snd 2
 # snd p
@@ -8,22 +10,25 @@ from collections import defaultdict, deque
 # rcv b
 # rcv c
 # rcv d"""
-instructions = problem_data.splitlines()
-send_count = [0, 0]
+instr = problem_data.splitlines()
 
-def run_program(index, program_registers, instruction_pointers, messages):
-    instruction_pointer = instruction_pointers[index]
-    registers = program_registers[index]
+def run_program(index, registers, instruction_pointer, instructions, receive_q: Queue, send_q: Queue, lock: Lock):
+    send_count = 0
     while instruction_pointer < len(instructions):
+        if not send_count%10000000:
+            if lock.acquire(True):
+                print(index, send_count, registers)
+                lock.release()
         cur = instructions[instruction_pointer].split()
         match cur[0]:
             case "snd":
-                arg = int(cur[1]) if is_integer_negative_support(cur[1]) else registers[cur[1]]
-                messages[(index+1)%2].append(arg)
-                send_count[index] += 1
+                # arg = int(cur[1]) if is_integer_negative_support(cur[1]) else registers[cur[1]]
+                # if lock.acquire(True):
+                #     print(index, f"Sending: {arg}")
+                #     lock.release()
+                # send_q.put(arg)
                 instruction_pointer += 1
-                instruction_pointers[index] = instruction_pointer
-                return 0
+                send_count += 1
             case "set":
                 arg = int(cur[2]) if is_integer_negative_support(cur[2]) else registers[cur[2]]
                 registers[cur[1]] = arg
@@ -47,10 +52,10 @@ def run_program(index, program_registers, instruction_pointers, messages):
                 registers[cur[1]] %= arg
                 instruction_pointer += 1
             case "rcv":
-                if len(messages[index]) == 0:
-                    instruction_pointers[index] = instruction_pointer
-                    return 0
-                registers[cur[1]] = messages[index].popleft()
+                registers[cur[1]] = 105#receive_q.get()
+                # if lock.acquire(True):
+                #     print(index, f"Received: {registers[cur[1]]}")
+                #     lock.release()
                 instruction_pointer += 1
             case "jgz":
                 if cur[1] in registers and registers[cur[1]] > 0:
@@ -58,22 +63,20 @@ def run_program(index, program_registers, instruction_pointers, messages):
                     instruction_pointer += arg
                 else:
                     instruction_pointer += 1
-    return -1
+    if lock.acquire(True):
+        print(index, send_count, instruction_pointer)
+        lock.release()
+    return
 
-program_registers = [{"p": 0}, {"p": 1}]
-messages = [deque(), deque()]
-instruction_pointers = [0, 0]
+if __name__ == "__main__":
+    left = Queue()
+    right = Queue()
+    lock = Lock()
+    process_1 = Process(target=run_program, args=(0, {"p": 0}, 0, deepcopy(instr), left, right, lock))
+    process_2 = Process(target=run_program, args=(1, {"p": 1}, 0, deepcopy(instr), right, left, lock))
+    freeze_support()
+    process_1.start()
+    process_2.start()
+    process_1.join()
+    process_2.join()
 
-iteration = 0
-# TODO: Doesn't terminate 
-while True:
-    if run_program(0, program_registers, instruction_pointers, messages) == -1:
-        run_program(1, program_registers, instruction_pointers, messages)
-        break
-    elif run_program(1, program_registers, instruction_pointers, messages) == -1:
-        run_program(0, program_registers, instruction_pointers, messages)
-        break
-    iteration += 1
-    if not iteration%10**6:
-        print(iteration, program_registers, send_count)
-print(send_count)
