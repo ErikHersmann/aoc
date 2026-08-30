@@ -1,0 +1,170 @@
+[
+    {
+        "alias": "pydle 188 y=0",
+        "mapping": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                3,
+                1
+            ],
+            [
+                4,
+                0
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: x==3",
+            "lambda x: 3==x"
+        ],
+        "length": 4
+    },
+    {
+        "alias": "pydle 188 y=1",
+        "mapping": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                2
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                3,
+                1
+            ],
+            [
+                4,
+                1
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: x*4>>x",
+            "lambda x: x*5>>x",
+            "lambda x: 4*x>>x",
+            "lambda x: 5*x>>x"
+        ],
+        "length": 6
+    },
+    {
+        "alias": "pydle 188 y=2",
+        "mapping": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                2
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                3,
+                2
+            ],
+            [
+                4,
+                0
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: 2&28>>x",
+            "lambda x: 2&29>>x",
+            "lambda x: 2&92>>x",
+            "lambda x: 2&93>>x",
+            "lambda x: 28>>x&2",
+            "lambda x: 29>>x&2",
+            "lambda x: 92>>x&2",
+            "lambda x: 93>>x&2"
+        ],
+        "length": 7
+    },
+    {
+        "alias": "pydle 188 y=3",
+        "mapping": [
+            [
+                0,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                3,
+                2
+            ],
+            [
+                4,
+                0
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: 1<<x//2&3",
+            "lambda x: 3&1<<x//2",
+            "lambda x: 3&5<<x//2",
+            "lambda x: 3&9<<x//2",
+            "lambda x: 4-x<<x>>2",
+            "lambda x: 5<<x//2&3",
+            "lambda x: 9<<x//2&3"
+        ],
+        "length": 9
+    },
+    {
+        "alias": "pydle 188 y=4",
+        "mapping": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                3,
+                0
+            ],
+            [
+                4,
+                0
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: x==1",
+            "lambda x: 1==x"
+        ],
+        "length": 4
+    }
+]
