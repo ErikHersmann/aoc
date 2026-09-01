@@ -166,5 +166,125 @@
             "lambda x: 1==x"
         ],
         "length": 4
+    },
+    {
+        "alias": "pydle 190 y=4",
+        "mapping": [
+            [
+                0,
+                2
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                2,
+                2
+            ],
+            [
+                3,
+                1
+            ],
+            [
+                4,
+                1
+            ]
+        ],
+        "optimal": false,
+        "solutions": [
+            "lambda x: 1+(x|2<3)"
+        ],
+        "length": 9
+    },
+    {
+        "alias": "pydle 190 y=3",
+        "mapping": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                0
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                3,
+                3
+            ],
+            [
+                4,
+                4
+            ]
+        ],
+        "optimal": true,
+        "solutions": [
+            "lambda x: x//3*x"
+        ],
+        "length": 6
+    },
+    {
+        "alias": "pydle 190 y=2",
+        "mapping": [
+            [
+                0,
+                false
+            ],
+            [
+                1,
+                false
+            ],
+            [
+                2,
+                false
+            ],
+            [
+                3,
+                true
+            ],
+            [
+                4,
+                true
+            ]
+        ],
+        "optimal": false,
+        "solutions": [
+            "lambda x: x>2"
+        ],
+        "length": 3
+    },
+    {
+        "alias": "pydle 190 y=1",
+        "mapping": [
+            [
+                0,
+                1
+            ],
+            [
+                1,
+                1
+            ],
+            [
+                2,
+                0
+            ],
+            [
+                3,
+                3
+            ],
+            [
+                4,
+                4
+            ]
+        ],
+        "optimal": false,
+        "solutions": [
+            "lambda x: (x<2)+((x>2)*x)"
+        ],
+        "length": 15
     }
 ]
