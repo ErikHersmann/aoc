@@ -3,9 +3,8 @@ from json import load, dump, dumps
 from inspect import getsourcelines
 from copy import deepcopy
 from os import path
-from itertools import combinations_with_replacement, product
+from itertools import product
 import warnings
-
 
 warnings.filterwarnings("ignore")
 
@@ -22,44 +21,47 @@ class mapping_object:
         Self.__sync_with_cache__()
         Self.debug = True
         Self.SYMBOL_NAME = "x"
-        numbers = [str(c) for c in range(10)]
-        Self.VALID_TOKENS = [
-            Self.SYMBOL_NAME,
-            "%",
+        Self.BITWISE_OPERATORS = [
             "&",
             "|",
             "^",
             "~",
             "<<",
             ">>",
+        ]
+        Self.NUMERICAL_OPERATORS = [
+            "%",
             "+",
             "-",
             "*",
+            "//",
+        ]
+        Self.COMPARISON_OPERATORS = [
             ">",
             "<",
             "==",
             "!=",
             "=>",
             "<=",
-            "//",
-            # "(",
-            # ")"
-            # " ",
         ]
-        Self.VALID_TOKENS.extend(numbers)
-        Self.VALID_START_TOKENS = [
-            Self.SYMBOL_NAME,
-            "-",
-            "~",
-            "*",
-            "("
+        Self.NUMBERS = [str(c) for c in range(10)]
+        Self.PARENTHESIS = [
+            "(",
+            ")",
         ]
-        Self.VALID_START_TOKENS.extend(numbers)
-        Self.VALID_END_TOKENS = [
-            Self.SYMBOL_NAME,
-            ")"
-        ]
-        Self.VALID_END_TOKENS.extend(numbers)
+        Self.TOKENS = []
+        Self.TOKENS.append(Self.SYMBOL_NAME)
+        Self.TOKENS.extend(Self.PARENTHESIS)
+        Self.TOKENS.extend(Self.NUMBERS)
+        Self.TOKENS.extend(Self.OPERATOR_TOKENS)
+        Self.OPERATOR_TOKENS = []
+        Self.OPERATOR_TOKENS.extend(Self.BITWISE_OPERATORS)
+        Self.OPERATOR_TOKENS.extend(Self.NUMERICAL_OPERATORS)
+        Self.OPERATOR_TOKENS.extend(Self.COMPARISON_OPERATORS)
+        Self.START_TOKENS = [Self.SYMBOL_NAME, "-", "~", "("]
+        Self.START_TOKENS.extend(Self.NUMBERS)
+        Self.END_TOKENS = [Self.SYMBOL_NAME, ")"]
+        Self.END_TOKENS.extend(Self.NUMBERS)
 
     def multi_heuristic_search(Self, timeout):
         if Self.optimal:
@@ -81,16 +83,73 @@ class mapping_object:
     def simulated_annealing(Self):
         raise Exception("Not implemented yet")
 
-    def fast_check_valid_solution(Self, solution: str) -> bool:
-        if solution[0] not in Self.VALID_START_TOKENS:
+    def __fast_check_valid_solution__(Self, solution: str) -> bool:
+        if solution[0] not in Self.START_TOKENS:
             return False
-        if solution[-1] not in Self.VALID_END_TOKENS:
+        if solution[-1] not in Self.END_TOKENS:
             return False
         if Self.SYMBOL_NAME not in solution:
             return False
         return True
 
-    def solve(Self):
+    def __dp_internal__(Self, expression: list, max_length: int):
+        if Self.__get_expression_length__(expression) >= max_length:
+            if Self.__validate_expression__(expression):
+                Self.__dp_solution_set__.add(expression)
+            return
+        for char in Self.__get_valid_next_char_set__(expression):
+            Self.__dp_internal__(Self, expression + char, max_length)
+
+    def __validate_expression__(Self, expression):
+        # TODO: Remove this method as we are technically always valid: because of the construction process of our string
+        try:
+            eval(f"lambda x: {"".join(expression)}")
+            return True
+        except:
+            return False
+
+    def __get_valid_next_char_set__(Self, expression):
+        next_chars = []
+        last_char = expression[-1] if len(expression) else "("
+        if last_char == "(":
+            return Self.START_TOKENS
+        if last_char in Self.OPERATOR_TOKENS:
+            # TODO: Handle intersection between START_TOKENS and OPERATOR_TOKENS
+            return Self.START_TOKENS
+        if last_char in Self.NEUTRAL_TOKENS:
+            pass
+            next_chars.append(")")
+        if last_char in Self.END_TOKENS:
+            next_chars.extend(Self.OPERATOR_TOKENS)
+            if (expression.count("(") - expression.count(")")) <= 0:
+                next_chars.remove(")")
+            return next_chars
+        raise Exception("Unreachable code")
+
+    def dynamic_programming_solve(Self):
+        if Self.optimal:
+            return
+        upper_bound = Self.__get_solution_length__()
+        bound = 1
+        solutions = []
+        print(f"Solving for: {Self.alias}")
+        while len(solutions) == 0:
+            Self.__dp_solution_set__ = set()
+            Self.__dp_internal__([], bound)
+            bound += 1
+            if Self.debug:
+                print(f"New lower bound: {bound}\tUpper bound: {upper_bound}")
+            if bound == upper_bound:
+                print(f"Didn't find a new solution, old solution must be optimal")
+                break
+        else:
+            Self.solutions = solutions
+            print(f"Found new solution")
+        Self.__cleanup_suboptimal_solutions__()
+        Self.optimal = True
+        Self.__sync_with_cache__()
+
+    def enumeration_solve(Self):
         """Naive brute force implementation to get some reference results for small input cases
            TODO: using AST we try out valid token combos that would save characters
            TODO: Check last character and only allow certain characters based on that or string position
@@ -105,19 +164,18 @@ class mapping_object:
         solutions = []
         print(f"Solving for: {Self.alias}")
         while len(solutions) == 0:
-            for brute_force_solution in product(Self.VALID_TOKENS, repeat=bound):
-                if not Self.fast_check_valid_solution(brute_force_solution):
+            for brute_force_solution in product(Self.TOKENS, repeat=bound):
+                if not Self.__fast_check_valid_solution__(brute_force_solution):
                     continue
                 try:
                     brute_force_solution = f"lambda x: {''.join(brute_force_solution)}"
                     l = eval(brute_force_solution)
-                    if Self.verify_mapping(l):
+                    if Self.__verify_mapping__(l):
                         solutions.append(brute_force_solution)
                         if (
                             Self.__get_solution_length__(len(Self.solutions) - 1)
                             == bound
                         ):
-                            print(f"Found new solution, exiting early")
                             break
                 except:
                     continue
@@ -130,17 +188,17 @@ class mapping_object:
         else:
             Self.solutions = solutions
             print(f"Found new solution")
-        Self.__cleanup_suboptimal_solutions()
+        Self.__cleanup_suboptimal_solutions__()
         Self.optimal = True
         Self.__sync_with_cache__()
 
-    def verify_mapping(Self, function):
+    def __verify_mapping__(Self, function):
         for source, target in Self.mapping:
             if function(source) != target:
                 return False
         return True
 
-    def __cleanup_suboptimal_solutions(Self):
+    def __cleanup_suboptimal_solutions__(Self):
         best = 1000
         indexed_solutions = list(enumerate(Self.solutions))
         for idx, solution in indexed_solutions:
@@ -200,6 +258,9 @@ class mapping_object:
             "length": Self.__get_solution_length__(),
         }
         return value
+
+    def __get_expression_length__(Self, expression: list):
+        return sum([len(a) for a in expression])
 
     def __get_solution_length__(Self, idx=0):
         if idx >= len(Self.solutions):
