@@ -77,12 +77,13 @@ class mapping_object:
         pass
 
     def heuristic_placeholder(Self):
-        # TODO: We have to update best known lower and upper bounds from this to "cache results"
+        # TODO: Sync upper bound from this with the cache
         # TODO: Decent time solution
         raise Exception("Not implemented yet")
 
     def rule_based_search(Self):
         # Maybe a strategic rule-based search
+        # Big
         raise Exception("Not implemented yet")
 
     def genetic_algorithm(Self):
@@ -101,18 +102,23 @@ class mapping_object:
         return True
 
     def __dp_internal__(Self, expression: list, max_length: int):
+        if Self.early_return and Self.__dp_solution_set_has_min_solution__:
+            return
         cur_length = Self.__get_expression_length__(expression)
         if cur_length >= max_length:
-            if Self.__validate_expression__(expression):
+            if Self.__validate_and_verify_expression__(expression):
                 Self.__dp_solution_set__.add("".join(expression))
+                if Self.__get_expression_length__(expression) == max_length:
+                    Self.__dp_solution_set_has_min_solution__ = True
             return
-        for char in Self.__get_valid_next_char_set__(expression, cur_length+1 >= max_length):
+        for char in Self.__get_valid_next_char_set__(
+            expression, cur_length + 1 >= max_length
+        ):
             expression_copy = deepcopy(expression)
             expression_copy.append(char)
             Self.__dp_internal__(expression_copy, max_length)
 
-    def __validate_expression__(Self, expression):
-        # TODO: Remove this method as we are technically always valid: because of the construction process of our string
+    def __validate_and_verify_expression__(Self, expression):
         try:
             l = eval(f"lambda x: {"".join(expression)}")
             return Self.__verify_mapping__(l)
@@ -131,18 +137,21 @@ class mapping_object:
             return Self.START_TOKENS
         if last_char in Self.END_TOKENS:
             if at_end:
-                return Self.NUMBERS_AND_SYMBOLS
+                return Self.END_TOKENS
             return Self.OPERATOR_TOKENS
         raise Exception("Unreachable code")
 
-    def dynamic_programming_solve(Self):
+    def dynamic_programming_solve(Self, early_return: bool):
         if Self.optimal:
             return
+        # TODO: Catch ctrl+c and update lower bound on cache
+        Self.early_return = early_return
         upper_bound = Self.__get_solution_length__()
         bound = 1
         solutions = []
         print(f"Solving for: {Self.alias}")
         while len(solutions) == 0:
+            Self.__dp_solution_set_has_min_solution__ = False
             Self.__dp_solution_set__ = set()
             Self.__dp_internal__([], bound)
             if len(Self.__dp_solution_set__) > 0:
@@ -160,8 +169,9 @@ class mapping_object:
         Self.__cleanup_suboptimal_solutions__()
         Self.optimal = True
         Self.__sync_with_cache__()
+        Self.early_return = False
 
-    def enumeration_solve(Self):
+    def enumeration_solve(Self, early_return: bool):
         """Naive brute force implementation to get some reference results for small input cases
            TODO: using AST we try out valid token combos that would save characters
            TODO: Check last character and only allow certain characters based on that or string position
@@ -169,8 +179,10 @@ class mapping_object:
         Args:
             Self (_type_): _description_
         """
+        # TODO: Catch ctrl+c and update lower bound on cache
         if Self.optimal:
             return
+        Self.early_return = early_return
         upper_bound = Self.__get_solution_length__()
         bound = 1
         solutions = []
@@ -185,7 +197,7 @@ class mapping_object:
                     l = eval(brute_force_solution)
                     if Self.__verify_mapping__(l):
                         solutions.append(brute_force_solution)
-                        if (
+                        if Self.early_return and (
                             Self.__get_solution_length__(len(Self.solutions) - 1)
                             == bound
                         ):
@@ -204,6 +216,7 @@ class mapping_object:
         Self.__cleanup_suboptimal_solutions__()
         Self.optimal = True
         Self.__sync_with_cache__()
+        Self.early_return = False
 
     def __verify_mapping__(Self, function):
         for source, target in Self.mapping:
@@ -221,6 +234,7 @@ class mapping_object:
                 Self.solutions.pop(idx)
 
     def __sync_with_cache__(Self):
+        # TODO: read out lower and upper bound in all cases
         if not path.exists(CACHE_PATH):
             with open(CACHE_PATH, "w") as f:
                 f.write()
@@ -269,6 +283,8 @@ class mapping_object:
             "optimal": Self.optimal,
             "solutions": Self.solutions,
             "length": Self.__get_solution_length__(),
+            "lower_bound": 0,
+            "upper_bound": Self.__get_solution_length__()
         }
         return value
 
@@ -283,3 +299,5 @@ class mapping_object:
     def __deserialize_from(Self, copy_from):
         Self.optimal = copy_from["optimal"]
         Self.solutions = copy_from["solutions"]
+        Self.lower_bound = copy_from["lower_bound"]
+        Self.upper_bound = copy_from["upper_bound"]
