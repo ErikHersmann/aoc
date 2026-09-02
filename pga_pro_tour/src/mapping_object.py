@@ -45,6 +45,9 @@ class mapping_object:
             "<=",
         ]
         Self.NUMBERS = [str(c) for c in range(10)]
+        Self.NUMBERS_AND_SYMBOLS = []
+        Self.NUMBERS_AND_SYMBOLS.append(Self.SYMBOL_NAME)
+        Self.NUMBERS_AND_SYMBOLS.extend(Self.NUMBERS)
         Self.OPERATOR_TOKENS = []
         Self.OPERATOR_TOKENS.extend(Self.BITWISE_OPERATORS)
         Self.OPERATOR_TOKENS.extend(Self.NUMERICAL_OPERATORS)
@@ -98,24 +101,28 @@ class mapping_object:
         return True
 
     def __dp_internal__(Self, expression: list, max_length: int):
-        if Self.__get_expression_length__(expression) >= max_length:
+        cur_length = Self.__get_expression_length__(expression)
+        if cur_length >= max_length:
             if Self.__validate_expression__(expression):
-                Self.__dp_solution_set__.add(expression)
+                Self.__dp_solution_set__.add("".join(expression))
             return
-        for char in Self.__get_valid_next_char_set__(expression):
-            Self.__dp_internal__(Self, expression + char, max_length)
+        for char in Self.__get_valid_next_char_set__(expression, cur_length+1 >= max_length):
+            expression_copy = deepcopy(expression)
+            expression_copy.append(char)
+            Self.__dp_internal__(expression_copy, max_length)
 
     def __validate_expression__(Self, expression):
         # TODO: Remove this method as we are technically always valid: because of the construction process of our string
         try:
-            eval(f"lambda x: {"".join(expression)}")
-            return True
+            l = eval(f"lambda x: {"".join(expression)}")
+            return Self.__verify_mapping__(l)
         except:
             return False
 
-    def __get_valid_next_char_set__(Self, expression):
-        next_chars = []
-        last_char = expression[-1] if len(expression) else "("
+    def __get_valid_next_char_set__(Self, expression, at_end: bool):
+        last_char = expression[-1] if len(expression) else "start"
+        if last_char == "start":
+            return Self.START_TOKENS_NO_ZERO
         if last_char == "(":
             # TODO: Don't start with 0, actually may be valid in some cases
             return Self.START_TOKENS
@@ -123,10 +130,9 @@ class mapping_object:
             # TODO: Handle intersection between START_TOKENS and OPERATOR_TOKENS
             return Self.START_TOKENS
         if last_char in Self.END_TOKENS:
-            next_chars.extend(Self.OPERATOR_TOKENS)
-            if (expression.count("(") - expression.count(")")) <= 0:
-                next_chars.remove(")")
-            return next_chars
+            if at_end:
+                return Self.NUMBERS_AND_SYMBOLS
+            return Self.OPERATOR_TOKENS
         raise Exception("Unreachable code")
 
     def dynamic_programming_solve(Self):
@@ -139,12 +145,15 @@ class mapping_object:
         while len(solutions) == 0:
             Self.__dp_solution_set__ = set()
             Self.__dp_internal__([], bound)
-            bound += 1
-            if Self.debug:
-                print(f"New lower bound: {bound}\tUpper bound: {upper_bound}")
-            if bound == upper_bound:
-                print(f"Didn't find a new solution, old solution must be optimal")
-                break
+            if len(Self.__dp_solution_set__) > 0:
+                solutions = list(Self.__dp_solution_set__)
+            else:
+                bound += 1
+                if Self.debug:
+                    print(f"New lower bound: {bound}\tUpper bound: {upper_bound}")
+                if bound == upper_bound:
+                    print(f"Didn't find a new solution, old solution must be optimal")
+                    break
         else:
             Self.solutions = solutions
             print(f"Found new solution")
