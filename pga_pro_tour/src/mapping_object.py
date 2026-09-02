@@ -45,23 +45,28 @@ class mapping_object:
             "<=",
         ]
         Self.NUMBERS = [str(c) for c in range(10)]
-        Self.PARENTHESIS = [
-            "(",
-            ")",
-        ]
-        Self.TOKENS = []
-        Self.TOKENS.append(Self.SYMBOL_NAME)
-        Self.TOKENS.extend(Self.PARENTHESIS)
-        Self.TOKENS.extend(Self.NUMBERS)
-        Self.TOKENS.extend(Self.OPERATOR_TOKENS)
         Self.OPERATOR_TOKENS = []
         Self.OPERATOR_TOKENS.extend(Self.BITWISE_OPERATORS)
         Self.OPERATOR_TOKENS.extend(Self.NUMERICAL_OPERATORS)
         Self.OPERATOR_TOKENS.extend(Self.COMPARISON_OPERATORS)
-        Self.START_TOKENS = [Self.SYMBOL_NAME, "-", "~", "("]
+        Self.START_TOKENS = []
         Self.START_TOKENS.extend(Self.NUMBERS)
-        Self.END_TOKENS = [Self.SYMBOL_NAME, ")"]
+        Self.START_TOKENS.append(Self.SYMBOL_NAME)
+        Self.START_TOKENS.append("-")
+        Self.START_TOKENS.append("~")
+        Self.START_TOKENS.append("(")
+        Self.END_TOKENS = []
         Self.END_TOKENS.extend(Self.NUMBERS)
+        Self.END_TOKENS.append(Self.SYMBOL_NAME)
+        Self.END_TOKENS.extend(")")
+        Self.START_TOKENS_NO_ZERO = deepcopy(Self.START_TOKENS)
+        Self.START_TOKENS_NO_ZERO.remove("0")
+        Self.TOKENS = []
+        Self.TOKENS.append(Self.SYMBOL_NAME)
+        Self.TOKENS.append("(")
+        Self.TOKENS.append(")")
+        Self.TOKENS.extend(Self.NUMBERS)
+        Self.TOKENS.extend(Self.OPERATOR_TOKENS)
 
     def multi_heuristic_search(Self, timeout):
         if Self.optimal:
@@ -112,13 +117,11 @@ class mapping_object:
         next_chars = []
         last_char = expression[-1] if len(expression) else "("
         if last_char == "(":
+            # TODO: Don't start with 0, actually may be valid in some cases
             return Self.START_TOKENS
         if last_char in Self.OPERATOR_TOKENS:
             # TODO: Handle intersection between START_TOKENS and OPERATOR_TOKENS
             return Self.START_TOKENS
-        if last_char in Self.NEUTRAL_TOKENS:
-            pass
-            next_chars.append(")")
         if last_char in Self.END_TOKENS:
             next_chars.extend(Self.OPERATOR_TOKENS)
             if (expression.count("(") - expression.count(")")) <= 0:
@@ -165,10 +168,11 @@ class mapping_object:
         print(f"Solving for: {Self.alias}")
         while len(solutions) == 0:
             for brute_force_solution in product(Self.TOKENS, repeat=bound):
-                if not Self.__fast_check_valid_solution__(brute_force_solution):
+                s = "".join(brute_force_solution)
+                if not Self.__fast_check_valid_solution__(s):
                     continue
                 try:
-                    brute_force_solution = f"lambda x: {''.join(brute_force_solution)}"
+                    brute_force_solution = f"lambda x: {s}"
                     l = eval(brute_force_solution)
                     if Self.__verify_mapping__(l):
                         solutions.append(brute_force_solution)
