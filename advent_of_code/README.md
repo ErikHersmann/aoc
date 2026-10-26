@@ -2,19 +2,19 @@
 
 | Year  |  Stars |
 |---|---|
-| 2025 | $${\color{white}\text{20\*/24\*}}$$  |
-| 2024 | $${\color{white}\text{17\*/50\*}}$$  |
-| 2023 |  $${\color{white}\text{2\*/50\*}}$$ |   
-| 2022 |  |   
-| 2021 |  |   
-| 2020 |   |   
-| 2019 | $${\color{white}\text{14\*/50\*}}$$  |   
-| 2018 |   |   
-| 2017 | $${\color{white}\text{20\*/50\*}}$$  |   
-| 2016 | $${\color{white}\text{26\*/50\*}}$$ |   
+| 2025 | $${\color{white}\text{20\*/24\*}}$$ |
+| 2024 | $${\color{white}\text{17\*/50\*}}$$ |
+| 2023 | $${\color{white}\text{2\*/50\*}}$$ |   
+| 2022 | $${\color{white}\text{2\*/50\*}}$$ |   
+| 2021 | $${\color{white}\text{17\*/50\*}}$$ |   
+| 2020 |  |   
+| 2019 | $${\color{white}\text{14\*/50\*}}$$ |   
+| 2018 | $${\color{white}\text{17\*/50\*}}$$ |   
+| 2017 | $${\color{white}\text{45\*/50\*}}$$ |   
+| 2016 | $${\color{white}\text{38\*/50\*}}$$ |   
 | 2015 | $${\color{gold}\text{50\*/50\*}}$$ |  
 
-Total stars: 149*/524*
+Total stars: 222*/524*
 
 2015:
 Days to cleanup TODO:
