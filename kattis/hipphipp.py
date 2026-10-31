@@ -1,0 +1,1 @@
+print("\n".join(["Hipp hipp hurra!" for _ in range(20)]))

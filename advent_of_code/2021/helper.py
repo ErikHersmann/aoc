@@ -3,8 +3,13 @@ from sys import maxsize
 from glob import glob
 from os import path as _path
 from math import sqrt
+from typing import List, Tuple
+import pathlib
 
-paths = ["advent_of_code/2021/input.txt", "2021/input.txt", "input.txt"]
+
+BLOCK_CHARACTER = "█"
+__year__ = str(pathlib.Path(__file__).parent.resolve()).split("/")[-1]
+paths = [f"advent_of_code/{__year__}/input.txt", f"{__year__}/input.txt", "input.txt"]
 for path in paths:
     if _path.exists(path):
         with open(path, "r") as f:
@@ -13,8 +18,66 @@ for path in paths:
             unsanitized_problem_data = f.read()
 
 
+def get_neighbors_2D(
+    x: int,
+    y: int,
+    use_diagonals: bool,
+    last_x: int,
+    last_y: int,
+    first_x: int = 0,
+    first_y: int = 0,
+) -> List[Tuple[int, int]]:
+    """Returns the coordinates of the neighbors for a given (x, y) coordinate pair in 2-dimensional space
+
+    Args:
+        x (int): The x-coordinate, in a coordinate-system where left is negative and right is positive
+        y (int): The y-coordinate, in a coordinate-system where down is negative and up is positive
+        use_diagonals (bool): Indicates whether to return TL, TR, BL, BR neighbors too
+        last_x (int): The upper x-limit of the grid (such as len(grid[0]))
+        last_y (int): The upper y-limit of the grid (such as len(grid))
+        first_x (int, optional): The lower x-limit of the grid. Defaults to 0.
+        first_y (int, optional): The lower y-limit of the grid. Defaults to 0.
+
+    Returns:
+        List[Tuple[int, int]]: List of (x, y) tuples that identify the valid neighbors.
+    """
+    neighbors = []
+    if y > first_y:
+        # top
+        neighbors.append((x, y - 1))
+        if x > first_x and use_diagonals:
+            # top left
+            neighbors.append((x - 1, y - 1))
+        if x < last_x - 1 and use_diagonals:
+            # top right
+            neighbors.append((x + 1, y - 1))
+    if y < last_y - 1:
+        # bottom
+        neighbors.append((x, y + 1))
+        if x > first_x and use_diagonals:
+            # bottom left
+            neighbors.append((x - 1, y + 1))
+        if x < last_x - 1 and use_diagonals:
+            # bottom right
+            neighbors.append((x + 1, y + 1))
+    if x > first_x:
+        # left
+        neighbors.append((x - 1, y))
+    if x < last_x - 1:
+        # right
+        neighbors.append((x + 1, y))
+    return neighbors
+
 
 def flip_square_string_90_degrees_right(string: str):
+    """Rotates the input string clockwise
+
+    Args:
+        string (str): The input matrix separated by newlines
+
+    Returns:
+        str: The matrix rotated by 3 hours clockwise
+    """
     assert sqrt(len(string.replace("\n", ""))).is_integer()
     columns = string.splitlines()[::-1]
     output = ""
@@ -23,20 +86,42 @@ def flip_square_string_90_degrees_right(string: str):
     output = output.strip("\n")
     return output
 
+
 def flip_square_string_180_degrees_along_horizontal_axis(string: str):
+    """Switch up and down with eachother in a string that is in rectangle form, separated by newlines
+
+    Args:
+        string (str): The input matrix separated by newlines
+
+    Returns:
+        str: The flipped matrix
+    """
     assert sqrt(len(string.replace("\n", ""))).is_integer()
     rows = string.splitlines()[::-1]
     return "\n".join(rows)
 
+
 def flip_square_string_180_degrees_along_vertical_axis(string: str):
+    """Switch left and right with eachother in a string that is in rectangle form, separated by newlines
+
+    Args:
+        string (str): The input matrix separated by newlines
+
+    Returns:
+        str: The flipped matrix
+    """
     assert sqrt(len(string.replace("\n", ""))).is_integer()
     output = []
     for row in string.splitlines():
         output.append([c for c in row])
-        for col_idx in range(len(row)//2):
-            output[-1][col_idx], output[-1][-col_idx-1] = row[-col_idx-1], row[col_idx]
+        for col_idx in range(len(row) // 2):
+            output[-1][col_idx], output[-1][-col_idx - 1] = (
+                row[-col_idx - 1],
+                row[col_idx],
+            )
         output[-1] = "".join(output[-1])
     return "\n".join(output)
+
 
 UP = (0, 1)
 UP_flip = (0, -1)
@@ -216,8 +301,8 @@ transform = DIR(False).apply_transformation
 transform_flip = DIR(True).apply_transformation
 
 
-def throw():
-    raise Exception("Unreachable code detected")
+def throw(msg: str = "Unreachable code detected"):
+    raise Exception(msg)
 
 
 def get_md5_hash(s: str):
